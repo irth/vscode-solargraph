@@ -1,5 +1,8 @@
 import { LanguageClient, LanguageClientOptions, ServerOptions, Middleware, } from 'vscode-languageclient';
 import * as net from 'net';
+
+import * as wslPath from 'wsl-path';
+
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
@@ -11,6 +14,12 @@ const frame = new Spinner();
 export function makeLanguageClient(configuration: solargraph.Configuration): LanguageClient {
 	let prepareStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 	prepareStatus.show();
+
+	const inWSL = vscode.workspace.getConfiguration('solargraph').WSLPaths;
+	const WSLSafePath = inWSL
+		? (path: string): string => wslPath.windowsToWslSync(path)
+		: (path: string): string => path;
+
 	let convertDocumentation = function (text: string):MarkdownString {
 		var regexp = /\(solargraph\:(.*?)\)/g;
 		var match;
@@ -70,7 +79,14 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 		middleware: middleware,
 		initializationOptions: {
 			enablePages: true,
-			viewsPath: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views'
+			viewsPath: WSLSafePath(vscode.extensions.getExtension('castwide.solargraph').extensionPath) + '/views'
+		},
+	}
+
+	if (inWSL) {
+		clientOptions.uriConverters = {
+			code2Protocol: (uri) => vscode.Uri.file(wslPath.windowsToWslSync(uri.fsPath)).toString(),
+			protocol2Code: (str) => vscode.Uri.file(wslPath.wslToWindowsSync(vscode.Uri.parse(str).fsPath))
 		}
 	}
 

@@ -52,6 +52,11 @@
                     ],
                     "description": "The type of transport to use."
                 },
+                "solargraph.WSLPaths": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Translate paths from Windows (C:/foo) to WSL (/mnt/c/foo) format."
+                },
                 "solargraph.externalServer": {
                     "type": "object",
                     "description": "The host and port to use for external transports. (Ignored for stdio and socket transports.)",
@@ -277,6 +282,7 @@
     "dependencies": {
         "html2plaintext": "^1.1.0",
         "solargraph-utils": "^0.8.2",
-        "vscode-languageclient": "^5.0.1"
+        "vscode-languageclient": "^5.0.1",
+        "wsl-path": "^1.1.0"
     }
 }
