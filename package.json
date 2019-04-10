@@ -52,10 +52,10 @@
                     ],
                     "description": "The type of transport to use."
                 },
-                "solargraph.WSLPaths": {
+                "solargraph.useWSL": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Translate paths from Windows (C:/foo) to WSL (/mnt/c/foo) format."
+                    "description": "Run the language server via the Windows Subsystem for Linux."
                 },
                 "solargraph.externalServer": {
                     "type": "object",

@@ -15,8 +15,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 	let prepareStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 	prepareStatus.show();
 
-	const inWSL = vscode.workspace.getConfiguration('solargraph').WSLPaths;
-	const WSLSafePath = inWSL
+	const WSLSafePath = configuration.useWSL
 		? (path: string): string => wslPath.windowsToWslSync(path)
 		: (path: string): string => path;
 
@@ -83,7 +82,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 		},
 	}
 
-	if (inWSL) {
+	if (configuration.useWSL) {
 		clientOptions.uriConverters = {
 			code2Protocol: (uri) => vscode.Uri.file(wslPath.windowsToWslSync(uri.fsPath)).toString(),
 			protocol2Code: (str) => vscode.Uri.file(wslPath.wslToWindowsSync(vscode.Uri.parse(str).fsPath))

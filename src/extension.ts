@@ -17,6 +17,7 @@ export function activate(context: ExtensionContext) {
 		config.viewsPath   = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
 		config.withSnippets = vsconfig.withSnippets || false;
 		config.workspace = vscode.workspace.rootPath || null;
+		config.useWSL = vsconfig.useWSL || false;
 	}
 	let solargraphConfiguration = new solargraph.Configuration();
 	applyConfiguration(solargraphConfiguration);
